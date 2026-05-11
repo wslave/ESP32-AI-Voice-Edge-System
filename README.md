@@ -45,6 +45,20 @@ npm run build
 
 ## 贡献者
 
+<!-- readme: collaborators,contributors -start -->
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/wslave">
+        <img src="https://avatars.githubusercontent.com/wslave?s=100" width="100px;" alt="wslave"/>
+        <br />
+        <sub><b>wslave</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+<!-- readme: collaborators,contributors -end -->
+
 - 许德佳（202200102141）：系统整理、Web 控制台适配、论文课题实现。
 
 ## 来源与许可
