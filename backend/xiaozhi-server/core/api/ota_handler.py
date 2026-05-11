@@ -350,7 +350,8 @@ class OTAHandler(BaseHandler):
             )
         finally:
             self._add_cors_headers(response)
-            return response
+
+        return response
 
     async def handle_get(self, request):
         """处理 OTA GET 请求"""
@@ -367,7 +368,8 @@ class OTAHandler(BaseHandler):
             response = web.Response(text="OTA接口异常", content_type="text/plain")
         finally:
             self._add_cors_headers(response)
-            return response
+
+        return response
 
     async def handle_download(self, request):
         """
@@ -412,4 +414,5 @@ class OTAHandler(BaseHandler):
                 self._add_cors_headers(resp)
             except Exception:
                 pass
-            return resp
+
+        return resp

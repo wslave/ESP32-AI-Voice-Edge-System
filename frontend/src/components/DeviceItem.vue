@@ -119,41 +119,61 @@ export default {
 <style lang="scss" scoped>
 .device-item {
   width: 342px;
-  border-radius: 20px;
-  background: #fafcfe;
-  padding: 22px 22px 14px;
+  min-height: 178px;
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  border-radius: 30px;
+  background: #ffffff;
+  padding: 24px 24px 18px;
   box-sizing: border-box;
+  box-shadow: rgba(14, 15, 12, 0.12) 0 0 0 1px;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: #fbfcf8;
+    border-color: rgba(22, 51, 0, 0.24);
+  }
+
   &-title {
     flex: 1;
-    font-weight: bold;
-    font-size: 18px;
-    color: #3d4566;
+    font-family: "Wise Sans", Inter, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 0.95;
+    color: #0e0f0c;
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    letter-spacing: 0;
   }
 }
 
 .device-name {
-  margin: 7px 0 10px;
-  font-weight: 400;
-  font-size: 11px;
-  color: #3d4566;
+  margin: 10px 0;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #454745;
   text-align: left;
 }
 
 .settings-btn {
-  font-weight: 500;
+  font-weight: 800;
   font-size: 12px;
-  color: #5778ff;
-  background: #e6ebff;
+  color: #163300;
+  background: rgba(22, 51, 0, 0.08);
   width: auto;
   padding: 0 12px;
-  height: 21px;
-  line-height: 21px;
+  min-height: 26px;
+  line-height: 26px;
   cursor: pointer;
-  border-radius: 14px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.settings-btn:hover {
+  background: #9fe870;
 }
 
 .version-info {
@@ -162,8 +182,8 @@ export default {
   align-items: center;
   margin-top: 15px;
   font-size: 12px;
-  color: #979db1;
-  font-weight: 400;
+  color: #868685;
+  font-weight: 600;
   &-scroll {
     margin-left: 20px;
     flex: 1;
@@ -186,8 +206,8 @@ export default {
 }
 
 .disabled-btn {
-  background: #e6e6e6;
-  color: #999;
+  background: #e8ebe6;
+  color: #868685;
   cursor: not-allowed;
 }
 </style>

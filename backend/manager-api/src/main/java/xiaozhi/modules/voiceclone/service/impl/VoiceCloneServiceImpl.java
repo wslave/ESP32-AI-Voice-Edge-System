@@ -298,7 +298,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
             baseDao.updateById(entity);
             throw re;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("语音复刻训练失败，voiceId={}", entity.getVoiceId(), e);
             entity.setTrainStatus(3);
             entity.setTrainError(e.getMessage());
             baseDao.updateById(entity);
@@ -347,8 +347,7 @@ public class VoiceCloneServiceImpl extends BaseServiceImpl<VoiceCloneDao, VoiceC
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(">>> HTTP status = " + response.statusCode());
-        System.out.println(">>> response body = " + response.body());
+        log.debug("火山语音复刻响应状态: {}, 响应体: {}", response.statusCode(), response.body());
 
         Map<String, Object> rsp = objectMapper.readValue(response.body(),
                 new TypeReference<Map<String, Object>>() {

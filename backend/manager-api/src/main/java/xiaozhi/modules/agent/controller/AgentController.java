@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import xiaozhi.common.constant.Constant;
 import xiaozhi.common.page.PageData;
 import xiaozhi.common.redis.RedisKeys;
@@ -61,6 +62,7 @@ import xiaozhi.modules.security.user.SecurityUser;
 
 @Tag(name = "智能体管理")
 @AllArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/agent")
 public class AgentController {
@@ -139,9 +141,9 @@ public class AgentController {
             new Thread(() -> {
                 try {
                     agentChatSummaryService.generateAndSaveChatSummary(sessionId);
-                    System.out.println("异步执行会话 " + sessionId + " 的聊天记录总结完成");
+                    log.info("异步执行会话 {} 的聊天记录总结完成", sessionId);
                 } catch (Exception e) {
-                    System.err.println("异步执行会话 " + sessionId + " 的聊天记录总结失败: " + e.getMessage());
+                    log.error("异步执行会话 {} 的聊天记录总结失败", sessionId, e);
                 }
             }).start();
 

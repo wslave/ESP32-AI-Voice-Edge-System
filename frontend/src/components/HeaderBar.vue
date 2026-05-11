@@ -598,12 +598,14 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  background: #f6fcfe66;
-  border: 1px solid #fff;
-  height: 63px !important;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  height: 72px !important;
   min-width: 900px;
   /* 设置最小宽度防止过度压缩 */
   overflow: visible;
+  backdrop-filter: blur(18px);
+  box-shadow: rgba(14, 15, 12, 0.12) 0 0 0 1px;
 }
 
 .header-container {
@@ -611,7 +613,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: 0 10px;
+  padding: 0 18px;
 }
 
 .header-left {
@@ -623,17 +625,19 @@ export default {
 }
 
 .brand-title {
-  color: #1f2a44;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.2;
+  color: #0e0f0c;
+  font-family: "Wise Sans", Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 0.9;
   white-space: nowrap;
+  letter-spacing: 0;
 }
 
 .header-center {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 10px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -648,33 +652,46 @@ export default {
 }
 
 .equipment-management {
-  height: 30px;
-  border-radius: 15px;
-  background: #deeafe;
+  min-height: 36px;
+  border-radius: 9999px;
+  background: rgba(22, 51, 0, 0.08);
   display: flex;
   justify-content: center;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 800;
   gap: 7px;
-  color: #3d4566;
+  color: #0e0f0c;
   margin-left: 1px;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
   cursor: pointer;
   flex-shrink: 0;
   /* 防止导航按钮被压缩 */
-  padding: 0 15px;
+  padding: 0 16px;
   position: relative;
 }
 
+.equipment-management:hover {
+  background: rgba(211, 242, 192, 0.6);
+  transform: scale(1.05);
+}
+
+.equipment-management:active {
+  transform: scale(0.95);
+}
+
 .equipment-management.active-tab {
-  background: #5778ff !important;
-  color: #fff !important;
+  background: #9fe870 !important;
+  color: #163300 !important;
 }
 
 .equipment-management img {
   width: 15px;
   height: 13px;
+}
+
+.equipment-management.active-tab img {
+  filter: brightness(0) saturate(100%) invert(16%) sepia(35%) saturate(1585%) hue-rotate(54deg) brightness(86%) contrast(104%) !important;
 }
 
 .search-container {
@@ -694,11 +711,12 @@ export default {
   left: 0;
   right: 0;
   background: white;
-  border: 1px solid #e4e6ef;
-  border-radius: 4px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  border-radius: 18px;
+  box-shadow: rgba(14, 15, 12, 0.12) 0 0 0 1px;
   z-index: 1000;
-  margin-top: 2px;
+  margin-top: 8px;
+  overflow: hidden;
 }
 
 .search-history-header {
@@ -706,9 +724,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(14, 15, 12, 0.08);
   font-size: 12px;
-  color: #909399;
+  color: #868685;
+  font-weight: 700;
 }
 
 .clear-history-btn {
@@ -734,11 +753,12 @@ export default {
   padding: 8px 12px;
   cursor: pointer;
   font-size: 12px;
-  color: #606266;
+  color: #454745;
+  font-weight: 700;
 }
 
 .search-history-item:hover {
-  background-color: #f5f7fa;
+  background-color: rgba(226, 246, 213, 0.72);
 }
 
 .clear-item-icon {
@@ -766,22 +786,23 @@ export default {
 }
 
 .custom-search-input>>>.el-input__inner {
-  height: 18px;
-  border-radius: 9px;
+  height: 34px;
+  border-radius: 9999px;
   background-color: #fff;
-  border: 1px solid #e4e6ef;
-  padding-left: 8px;
-  font-size: 9px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  padding-left: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: none;
   width: 100%;
 }
 
 .search-icon {
   cursor: pointer;
-  color: #909399;
-  margin-right: 3px;
-  font-size: 9px;
-  line-height: 18px;
+  color: #163300;
+  margin-right: 8px;
+  font-size: 14px;
+  line-height: 34px;
 }
 
 .custom-search-input::v-deep .el-input__suffix-inner {
@@ -791,20 +812,24 @@ export default {
 }
 
 .avatar-img {
-  width: 21px;
-  height: 21px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   cursor: pointer;
+  border-radius: 50%;
+  box-shadow: rgba(14, 15, 12, 0.12) 0 0 0 1px;
 }
 .el-user-dropdown {
   cursor: pointer;
+  color: #0e0f0c;
+  font-weight: 800;
 }
 
 /* 导航文本样式 - 支持中英文换行 */
 .nav-text {
-  white-space: normal;
+  white-space: nowrap;
   text-align: center;
-  max-width: 80px;
+  max-width: 112px;
   line-height: 1.2;
 }
 
@@ -816,7 +841,8 @@ export default {
 
   .equipment-management {
     min-width: 80px;
-    font-size: 10px;
+    font-size: 12px;
+    padding: 0 12px;
   }
 }
 

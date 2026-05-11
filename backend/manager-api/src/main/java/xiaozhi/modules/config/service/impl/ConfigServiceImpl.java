@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import xiaozhi.common.constant.Constant;
 import xiaozhi.common.exception.ErrorCode;
 import xiaozhi.common.exception.RenException;
@@ -49,6 +50,7 @@ import xiaozhi.modules.voiceclone.service.VoiceCloneService;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ConfigServiceImpl implements ConfigService {
     private final SysParamsService sysParamsService;
     private final DeviceService deviceService;
@@ -382,7 +384,7 @@ public class ConfigServiceImpl implements ConfigService {
             result.put("voiceprint", voiceprintConfig);
         } catch (Exception e) {
             // 声纹配置获取失败时不影响其他功能
-            System.err.println("获取声纹配置失败: " + e.getMessage());
+            log.warn("获取声纹配置失败", e);
         }
     }
 
@@ -499,7 +501,7 @@ public class ConfigServiceImpl implements ConfigService {
                             map.put("functions", functions);
                         }
                     }
-                    System.out.println("map: " + map);
+                    log.debug("Intent model config: {}", map);
                 }
                 if ("Memory".equals(modelTypes[i])) {
                     Map<String, Object> map = (Map<String, Object>) model.getConfigJson();

@@ -343,14 +343,17 @@ export default {
   min-width: 100px;
   height: 40px;
   line-height: 40px;
-  border-radius: 4px;
+  border-radius: 9999px;
   font-size: 14px;
-  background: rgb(87, 120, 255);
+  font-weight: 800;
+  background: #9fe870;
+  color: #163300;
   border: none;
   padding: 0px;
 
   &:disabled {
-    background: #c0c4cc;
+    background: #e8ebe6;
+    color: #868685;
     cursor: not-allowed;
   }
 }

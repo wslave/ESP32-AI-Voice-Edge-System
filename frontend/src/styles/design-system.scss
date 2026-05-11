@@ -1,0 +1,426 @@
+:root {
+  --wise-black: #0e0f0c;
+  --wise-green: #9fe870;
+  --wise-green-hover: #cdffad;
+  --wise-dark-green: #163300;
+  --wise-positive: #054d28;
+  --wise-danger: #d03238;
+  --wise-warning: #ffd11a;
+  --wise-mint: #e2f6d5;
+  --wise-surface: #fbfcf8;
+  --wise-surface-strong: #ffffff;
+  --wise-surface-muted: #e8ebe6;
+  --wise-border: rgba(14, 15, 12, 0.12);
+  --wise-border-strong: rgba(14, 15, 12, 0.2);
+  --wise-text: #0e0f0c;
+  --wise-text-muted: #454745;
+  --wise-text-subtle: #868685;
+  --wise-orange: #ffc091;
+  --wise-info: rgba(56, 200, 255, 0.1);
+  --wise-radius-input: 10px;
+  --wise-radius-card: 30px;
+  --wise-radius-panel: 40px;
+  --wise-ring: rgba(14, 15, 12, 0.12) 0 0 0 1px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-feature-settings: "calt";
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--wise-surface);
+  color: var(--wise-text);
+  font-family: Inter, "Wise Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+}
+
+body {
+  overflow: hidden;
+}
+
+a,
+button,
+.el-button,
+.el-dropdown-link,
+.el-select-dropdown__item,
+.el-cascader-node,
+.pagination-btn,
+.settings-btn,
+.login-btn {
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+button:not(:disabled):hover,
+.el-button:not(.is-disabled):hover,
+.pagination-btn:not(:disabled):hover,
+.settings-btn:not(.disabled-btn):hover,
+.login-btn:hover {
+  transform: scale(1.05);
+}
+
+button:not(:disabled):active,
+.el-button:not(.is-disabled):active,
+.pagination-btn:not(:disabled):active,
+.settings-btn:not(.disabled-btn):active,
+.login-btn:active {
+  transform: scale(0.95);
+}
+
+.welcome {
+  background: radial-gradient(circle at 16% 0%, rgba(226, 246, 213, 0.92), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcf8 48%, #f2f5ef 100%) !important;
+  color: var(--wise-text) !important;
+}
+
+.operation-bar {
+  min-height: 88px;
+  padding: 20px 28px !important;
+  color: var(--wise-text) !important;
+}
+
+.page-title {
+  color: var(--wise-text) !important;
+  font-family: "Wise Sans", Inter, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: clamp(32px, 4vw, 56px) !important;
+  font-weight: 900 !important;
+  line-height: 0.88 !important;
+  letter-spacing: 0 !important;
+}
+
+.right-operations {
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.main-wrapper {
+  margin: 0 24px 18px !important;
+  border: 1px solid var(--wise-border) !important;
+  border-radius: var(--wise-radius-panel) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: var(--wise-ring) !important;
+  overflow: hidden !important;
+}
+
+.content-panel {
+  border: 0 !important;
+  border-radius: var(--wise-radius-panel) !important;
+  background: transparent !important;
+}
+
+.content-area {
+  background: var(--wise-surface-strong) !important;
+  border-radius: var(--wise-radius-panel) !important;
+}
+
+.el-card {
+  border: 0 !important;
+  border-radius: var(--wise-radius-card) !important;
+  background: transparent !important;
+  color: var(--wise-text) !important;
+  box-shadow: none !important;
+}
+
+.el-card__body {
+  color: var(--wise-text) !important;
+}
+
+.el-button,
+.btn-search,
+.select-all-btn,
+.add-device-btn,
+.ctrl_btn .el-button {
+  border: 1px solid transparent !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+.el-button--primary,
+.el-button--success,
+.btn-search,
+.select-all-btn,
+.add-device-btn,
+.ctrl_btn .el-button--primary,
+.ctrl_btn .el-button--success {
+  background: var(--wise-green) !important;
+  border-color: var(--wise-green) !important;
+  color: var(--wise-dark-green) !important;
+}
+
+.el-button--primary:hover,
+.el-button--success:hover,
+.btn-search:hover,
+.select-all-btn:hover,
+.add-device-btn:hover,
+.ctrl_btn .el-button--primary:hover,
+.ctrl_btn .el-button--success:hover {
+  background: var(--wise-green-hover) !important;
+  border-color: var(--wise-green-hover) !important;
+  color: var(--wise-dark-green) !important;
+}
+
+.el-button--default,
+.el-button--info {
+  background: rgba(22, 51, 0, 0.08) !important;
+  border-color: transparent !important;
+  color: var(--wise-text) !important;
+}
+
+.el-button--danger,
+.ctrl_btn .el-button--danger {
+  background: var(--wise-danger) !important;
+  border-color: var(--wise-danger) !important;
+  color: #ffffff !important;
+}
+
+.el-button--text {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--wise-positive) !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+.el-input__inner,
+.el-textarea__inner,
+.el-select .el-input__inner,
+.search-input .el-input__inner,
+.custom-search-input .el-input__inner {
+  border: 1px solid var(--wise-border) !important;
+  border-radius: var(--wise-radius-input) !important;
+  background: #ffffff !important;
+  color: var(--wise-text) !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+.el-input__inner:focus,
+.el-textarea__inner:focus,
+.el-select .el-input.is-focus .el-input__inner,
+.search-input .el-input__inner:focus {
+  border-color: var(--wise-dark-green) !important;
+  box-shadow: rgb(134, 134, 133) 0 0 0 1px inset !important;
+}
+
+.el-input__inner::placeholder,
+.el-textarea__inner::placeholder {
+  color: var(--wise-text-subtle) !important;
+  font-weight: 500 !important;
+}
+
+.el-table,
+.transparent-table {
+  background: transparent !important;
+  color: var(--wise-text) !important;
+  font-weight: 600 !important;
+}
+
+.el-table th.el-table__cell,
+.transparent-table .el-table__header th {
+  background: var(--wise-mint) !important;
+  color: var(--wise-text) !important;
+  border-bottom: 1px solid var(--wise-border) !important;
+  font-weight: 800 !important;
+}
+
+.el-table td.el-table__cell,
+.transparent-table .el-table__body tr td {
+  border-bottom: 1px solid rgba(14, 15, 12, 0.08) !important;
+  color: var(--wise-text-muted) !important;
+}
+
+.el-table__body tr:hover > td.el-table__cell {
+  background: rgba(226, 246, 213, 0.38) !important;
+}
+
+.el-table::before,
+.el-table--group::after,
+.el-table--border::after {
+  display: none !important;
+}
+
+.el-tag {
+  border: 1px solid transparent !important;
+  border-radius: 9999px !important;
+  font-weight: 800 !important;
+}
+
+.el-tag--success {
+  background: var(--wise-mint) !important;
+  color: var(--wise-positive) !important;
+}
+
+.el-tag--danger {
+  background: rgba(208, 50, 56, 0.1) !important;
+  color: var(--wise-danger) !important;
+}
+
+.el-tag--warning {
+  background: rgba(255, 209, 26, 0.24) !important;
+  color: #614a00 !important;
+}
+
+.el-switch.is-checked .el-switch__core {
+  background: var(--wise-green) !important;
+  border-color: var(--wise-green) !important;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background: var(--wise-green) !important;
+  border-color: var(--wise-green) !important;
+}
+
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: var(--wise-dark-green) !important;
+}
+
+.el-dialog {
+  border-radius: var(--wise-radius-panel) !important;
+  border: 1px solid var(--wise-border) !important;
+  box-shadow: var(--wise-ring) !important;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  background: var(--wise-mint) !important;
+  color: var(--wise-text) !important;
+  padding: 24px 28px 18px !important;
+}
+
+.el-dialog__title {
+  color: var(--wise-text) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.el-dialog__body {
+  color: var(--wise-text) !important;
+}
+
+.el-form-item__label {
+  color: var(--wise-text-muted) !important;
+  font-weight: 700 !important;
+}
+
+.el-dropdown-menu,
+.el-select-dropdown,
+.el-cascader__dropdown {
+  border: 1px solid var(--wise-border) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--wise-ring) !important;
+  overflow: hidden;
+}
+
+.el-dropdown-menu__item,
+.el-select-dropdown__item,
+.el-cascader-node {
+  color: var(--wise-text) !important;
+  font-weight: 700 !important;
+}
+
+.el-dropdown-menu__item:hover,
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover,
+.el-cascader-node:not(.is-disabled):focus,
+.el-cascader-node:not(.is-disabled):hover {
+  background: rgba(226, 246, 213, 0.7) !important;
+  color: var(--wise-dark-green) !important;
+}
+
+.custom-pagination {
+  gap: 8px !important;
+}
+
+.custom-pagination .pagination-btn,
+.pagination-btn {
+  min-height: 32px !important;
+  border: 1px solid var(--wise-border) !important;
+  border-radius: 9999px !important;
+  background: rgba(22, 51, 0, 0.08) !important;
+  color: var(--wise-text) !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.custom-pagination .pagination-btn.active,
+.pagination-btn.active {
+  background: var(--wise-green) !important;
+  border-color: var(--wise-green) !important;
+  color: var(--wise-dark-green) !important;
+}
+
+.custom-pagination .pagination-btn:disabled,
+.pagination-btn:disabled,
+.el-button.is-disabled {
+  opacity: 0.48 !important;
+  transform: none !important;
+}
+
+.total-text,
+.copyright,
+.version-info,
+.login-welcome {
+  color: var(--wise-text-subtle) !important;
+}
+
+.el-message {
+  border: 1px solid var(--wise-border) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--wise-ring) !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(14, 15, 12, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 51, 0, 0.22);
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 51, 0, 0.36);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+@media (max-width: 992px) {
+  body {
+    overflow: auto;
+  }
+
+  .welcome {
+    min-width: 0 !important;
+    min-height: 100vh !important;
+  }
+
+  .operation-bar {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .right-operations {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+
+  .main-wrapper {
+    margin: 0 12px 16px !important;
+    border-radius: 28px !important;
+  }
+}

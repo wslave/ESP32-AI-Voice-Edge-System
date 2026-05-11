@@ -20,13 +20,58 @@
               <div class="left-add" @click="showAddDialog">
                 {{ $t('home.addAgent') }}
               </div>
-              <div style="width: 23px;height: 13px;background: #5778ff;margin-left: -10px;" />
+              <div class="add-device-btn-bridge" />
               <div class="right-add">
-                <i class="el-icon-right" @click="showAddDialog" style="font-size: 20px;color: #fff;" />
+                <i class="el-icon-right" @click="showAddDialog" style="font-size: 20px;color: #163300;" />
               </div>
             </div>
           </div>
         </div>
+        <section class="ops-overview" aria-label="系统运行概览">
+          <div class="overview-card overview-card--dark">
+            <div class="metric-label">智能体总数</div>
+            <div class="metric-value">{{ dashboardStats.agentCount }}</div>
+            <div class="metric-note">{{ isSearching ? '当前为搜索结果' : '已加载工作台列表' }}</div>
+          </div>
+          <div class="overview-card">
+            <div class="metric-label">已绑定设备</div>
+            <div class="metric-value">{{ dashboardStats.deviceCount }}</div>
+            <div class="metric-note">跨全部智能体统计</div>
+          </div>
+          <div class="overview-card">
+            <div class="metric-label">启用能力</div>
+            <div class="metric-value">{{ dashboardStats.enabledFeatureCount }}/3</div>
+            <div class="metric-note">{{ dashboardStats.enabledFeatureNames }}</div>
+          </div>
+          <div class="overview-card">
+            <div class="metric-label">待唤醒会话</div>
+            <div class="metric-value">{{ dashboardStats.idleAgentCount }}</div>
+            <div class="metric-note">暂无最近对话的智能体</div>
+          </div>
+        </section>
+        <section class="ops-strip" aria-label="快捷运维入口">
+          <div class="ops-strip__left">
+            <span class="ops-dot"></span>
+            <span>本地服务</span>
+            <strong>Web 8001</strong>
+            <strong>API 8002</strong>
+            <strong>Device 8000</strong>
+          </div>
+          <div class="ops-strip__actions">
+            <button type="button" @click="fetchAgentList">
+              <i class="el-icon-refresh"></i>
+              <span>刷新</span>
+            </button>
+            <button type="button" @click="handleDeviceManage">
+              <i class="el-icon-cpu"></i>
+              <span>设备</span>
+            </button>
+            <button type="button" @click="showAddDialog">
+              <i class="el-icon-plus"></i>
+              <span>智能体</span>
+            </button>
+          </div>
+        </section>
         <div class="device-list-container">
           <template v-if="isLoading">
             <div v-for="i in skeletonCount" :key="'skeleton-' + i" class="skeleton-item">
@@ -91,6 +136,24 @@ export default {
   async mounted() {
     this.fetchAgentList();
     await this.loadFeatureStatus();
+  },
+
+  computed: {
+    dashboardStats() {
+      const enabledFeatures = [
+        { enabled: this.featureStatus.voiceprintRecognition, label: '声纹' },
+        { enabled: this.featureStatus.voiceClone, label: '复刻' },
+        { enabled: this.featureStatus.knowledgeBase, label: '知识库' }
+      ].filter(item => item.enabled);
+
+      return {
+        agentCount: this.devices.length,
+        deviceCount: this.devices.reduce((total, item) => total + Number(item.deviceCount || 0), 0),
+        enabledFeatureCount: enabledFeatures.length,
+        enabledFeatureNames: enabledFeatures.length ? enabledFeatures.map(item => item.label).join(' / ') : '基础模式',
+        idleAgentCount: this.devices.filter(item => !item.lastConnectedAt).length
+      };
+    }
   },
 
   methods: {
@@ -212,7 +275,9 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(145deg, #e6eeff, #eff0ff);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(159, 232, 112, 0.2), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcf8 52%, #f2f5ef 100%);
   background-size: cover;
   /* 确保背景图像覆盖整个元素 */
   background-position: center;
@@ -224,14 +289,15 @@ export default {
 }
 
 .add-device {
-  height: 195px;
-  border-radius: 15px;
+  min-height: 230px;
+  border-radius: 40px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(269.62deg,
-      #e0e6fd 0%,
-      #cce7ff 49.69%,
-      #d3d3fe 100%);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255, 192, 145, 0.32), transparent 24%),
+    linear-gradient(135deg, #e2f6d5 0%, #fbfcf8 48%, #ffffff 100%);
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  box-shadow: rgba(14, 15, 12, 0.12) 0 0 0 1px;
 }
 
 .add-device-bg {
@@ -252,19 +318,21 @@ export default {
   /* 兼容老版本Opera浏览器 */
   .hellow-text {
     margin-left: 75px;
-    color: #3d4566;
-    font-size: 33px;
-    font-weight: 700;
+    color: #0e0f0c;
+    font-family: "Wise Sans", Inter, "Helvetica Neue", Arial, sans-serif;
+    font-size: 54px;
+    font-weight: 900;
+    line-height: 0.88;
     letter-spacing: 0;
   }
 
   .hi-hint {
-    font-weight: 400;
-    font-size: 12px;
+    font-weight: 700;
+    font-size: 15px;
     text-align: left;
-    color: #818cae;
+    color: #454745;
     margin-left: 75px;
-    margin-top: 5px;
+    margin-top: 12px;
   }
 }
 
@@ -272,26 +340,43 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 75px;
-  margin-top: 15px;
+  margin-top: 22px;
   cursor: pointer;
+  width: fit-content;
+  transition: transform 180ms ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 
   .left-add {
-    padding: 0 14px;
-    height: 34px;
-    border-radius: 17px;
-    background: #5778ff;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
+    padding: 0 18px;
+    height: 40px;
+    border-radius: 9999px;
+    background: #9fe870;
+    color: #163300;
+    font-size: 15px;
+    font-weight: 800;
     text-align: center;
-    line-height: 34px;
+    line-height: 40px;
+  }
+
+  .add-device-btn-bridge {
+    width: 20px;
+    height: 14px;
+    background: #9fe870;
+    margin-left: -10px;
   }
 
   .right-add {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #5778ff;
+    background: #9fe870;
     margin-left: -6px;
     display: flex;
     justify-content: center;
@@ -301,9 +386,120 @@ export default {
 
 .device-list-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 30px;
-  padding: 30px 0;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  padding: 28px 0;
+}
+
+.ops-overview {
+  display: grid;
+  grid-template-columns: 1.35fr repeat(3, minmax(160px, 1fr));
+  gap: 14px;
+  margin: 18px 0 12px;
+}
+
+.overview-card {
+  min-height: 116px;
+  padding: 18px 20px;
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: rgba(14, 15, 12, 0.08) 0 1px 0;
+}
+
+.overview-card--dark {
+  background: #163300;
+  color: #ffffff;
+
+  .metric-label,
+  .metric-note {
+    color: rgba(255, 255, 255, 0.72);
+  }
+}
+
+.metric-label {
+  color: #454745;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.metric-value {
+  margin-top: 10px;
+  color: inherit;
+  font-family: "Wise Sans", Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.metric-note {
+  min-height: 18px;
+  margin-top: 10px;
+  color: #868685;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ops-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 58px;
+  padding: 10px 12px 10px 18px;
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.ops-strip__left,
+.ops-strip__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ops-strip__left {
+  color: #454745;
+  font-size: 13px;
+  font-weight: 800;
+
+  strong {
+    padding: 7px 10px;
+    border-radius: 9999px;
+    background: rgba(22, 51, 0, 0.08);
+    color: #163300;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+.ops-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #9fe870;
+  box-shadow: 0 0 0 5px rgba(159, 232, 112, 0.25);
+}
+
+.ops-strip__actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9999px;
+  background: #9fe870;
+  color: #163300;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
 }
 
 /* 在 DeviceItem.vue 的样式中 */
@@ -332,7 +528,8 @@ export default {
 
 .skeleton-item {
   background: #fff;
-  border-radius: 8px;
+  border: 1px solid rgba(14, 15, 12, 0.12);
+  border-radius: 30px;
   padding: 20px;
   height: 120px;
   position: relative;
@@ -343,8 +540,8 @@ export default {
 .skeleton-image {
   width: 80px;
   height: 80px;
-  background: #f0f2f5;
-  border-radius: 4px;
+  background: #e8ebe6;
+  border-radius: 20px;
   float: left;
   position: relative;
   overflow: hidden;
@@ -356,8 +553,8 @@ export default {
 
 .skeleton-line {
   height: 16px;
-  background: #f0f2f5;
-  border-radius: 4px;
+  background: #e8ebe6;
+  border-radius: 9999px;
   margin-bottom: 12px;
   width: 70%;
   position: relative;
@@ -366,8 +563,8 @@ export default {
 
 .skeleton-line-short {
   height: 12px;
-  background: #f0f2f5;
-  border-radius: 4px;
+  background: #e8ebe6;
+  border-radius: 9999px;
   width: 50%;
 }
 

@@ -114,8 +114,7 @@ class TTSProvider(TTSProviderBase):
                 )
         except Exception as e:
             logger.bind(tag=TAG).error(f"Failed to generate TTS file: {e}")
-        finally:
-            return None
+        return None
 
     async def text_to_speak(self, text, is_last):
         """流式处理TTS音频，每句只推送一次音频列表"""

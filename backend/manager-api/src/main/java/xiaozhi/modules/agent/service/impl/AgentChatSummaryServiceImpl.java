@@ -58,7 +58,7 @@ public class AgentChatSummaryServiceImpl implements AgentChatSummaryService {
 
     private AgentChatSummaryDTO generateChatSummary(String sessionId) {
         try {
-            System.out.println("开始生成会话 " + sessionId + " 的聊天记录总结");
+            log.info("开始生成会话 {} 的聊天记录总结", sessionId);
 
             // 1. 根据sessionId获取聊天记录
             List<AgentChatHistoryDTO> chatHistory = getChatHistoryBySessionId(sessionId);

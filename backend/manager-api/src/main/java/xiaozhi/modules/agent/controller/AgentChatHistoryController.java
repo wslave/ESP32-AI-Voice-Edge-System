@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import xiaozhi.common.constant.Constant;
 import xiaozhi.common.exception.ErrorCode;
 import xiaozhi.common.exception.RenException;
@@ -44,6 +45,7 @@ import xiaozhi.modules.security.user.SecurityUser;
 
 @Tag(name = "智能体聊天历史管理")
 @RequiredArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/agent/chat-history")
 public class AgentChatHistoryController {
@@ -240,7 +242,7 @@ public class AgentChatHistoryController {
                 out.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("下载聊天记录失败，agentId={}, sessionIds={}", agentId, sessionIds, e);
         }
     }
 }

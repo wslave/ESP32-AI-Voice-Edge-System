@@ -7,11 +7,14 @@
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  font-family: Inter, "Wise Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: "calt";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #0e0f0c;
+  background: #fbfcf8;
 }
 
 nav {
@@ -22,16 +25,16 @@ nav {
     color: #2c3e50;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #163300;
     }
   }
 }
 
 .copyright {
   padding: 0 !important;
-  color: rgb(0, 0, 0);
+  color: #454745;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 600;
   margin-top: auto;
   width: 100%;
   height: 100%;

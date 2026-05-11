@@ -156,7 +156,8 @@ class VisionHandler(BaseHandler):
         finally:
             if response:
                 self._add_cors_headers(response)
-            return response
+
+        return response
 
     async def handle_get(self, request):
         """处理 MCP Vision GET 请求"""
@@ -179,4 +180,5 @@ class VisionHandler(BaseHandler):
             )
         finally:
             self._add_cors_headers(response)
-            return response
+
+        return response

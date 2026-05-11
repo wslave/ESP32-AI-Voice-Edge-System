@@ -390,7 +390,8 @@ export default {
   margin-left: 4px;
   margin-right: 4px;
   font-size: 12px;
-  color: #3d4566;
+  color: #454745;
+  font-weight: 700;
 }
 
 .language-dropdown {
@@ -407,18 +408,20 @@ export default {
 }
 
 :deep(.el-button--primary) {
-  background-color: #5778ff;
-  border-color: #5778ff;
+  background-color: #9fe870;
+  border-color: #9fe870;
+  color: #163300;
 
   &:hover,
   &:focus {
-    background-color: #4a6ae8;
-    border-color: #4a6ae8;
+    background-color: #cdffad;
+    border-color: #cdffad;
+    color: #163300;
   }
 
   &:active {
-    background-color: #3d5cd6;
-    border-color: #3d5cd6;
+    background-color: #9fe870;
+    border-color: #9fe870;
   }
 }
 </style>

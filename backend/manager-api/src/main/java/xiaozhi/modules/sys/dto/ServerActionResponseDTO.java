@@ -18,11 +18,13 @@ public class ServerActionResponseDTO
     public static final String DEFAULT_TYPE_FORM_SERVER = "server";
 
     public static Boolean isSuccess(ServerActionResponseDTO actionResponseDTO) {
-        System.out.println(actionResponseDTO);
         if (actionResponseDTO == null) {
             return false;
         }
         if (actionResponseDTO.getStatus() == null || !actionResponseDTO.getStatus().equals(ServerActionResponseEnum.SUCCESS)) {
+            return false;
+        }
+        if (actionResponseDTO.getContent() == null) {
             return false;
         }
         Object actionType = actionResponseDTO.getContent().get("action");
