@@ -58,9 +58,3 @@ npm run build
   </tr>
 </table>
 <!-- readme: collaborators,contributors -end -->
-
-- 许德佳（202200102141）：系统整理、Web 控制台适配、论文课题实现。
-
-## 来源与许可
-
-本仓库在 MIT 许可代码基础上进行课题化整理和二次开发，保留 `LICENSE` 与 `NOTICE` 中的来源说明。后续发布、论文附录或答辩材料中，建议继续保留开源来源与许可信息。
