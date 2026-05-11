@@ -1,6 +1,6 @@
 # ESP32 本地 AI 语音交互控制系统
 
-本仓库对应毕业论文《基于 ESP32 与本地 AI 上位机的语音交互控制系统的设计与实现》，实现形态为 `ESP32 语音终端 + 本地 AI 上位机 + Web 控制台`。代码由 C++ 固件、Python 实时语音服务、Java 管理后端和 Vue 前端组成，目标是完成局域网内的语音采集、识别、语义处理、设备管理、状态监控和测试联调。
+本仓库对应毕业论文《基于 ESP32 与本地 AI 上位机的语音交互控制系统的设计与实现》，实现形态为 `ESP32 语音终端 + 本地 AI 上位机 + Web GUI 控制台`。代码由 C++ 固件、Python 实时语音服务、Java 管理后端和 Vue 前端组成，目标是完成局域网内的语音采集、识别、语义处理、设备管理、聊天记录更新、状态监控和测试联调。
 
 ## 项目组成
 
@@ -22,7 +22,7 @@
   - `backend/xiaozhi-server/`：Python 实时语音服务，负责音频接入、VAD、ASR、LLM、TTS、意图处理和 WebSocket/HTTP 接口
   - `backend/manager-api/`：Spring Boot 管理后端，负责用户、设备、参数、知识库、模型、OTA 和配置管理
 
-### Web 控制台
+### Web GUI 控制台
 
 - 目录：`frontend/`
 - 技术栈：Vue 2、Vue Router、Vuex、Element UI
@@ -30,6 +30,7 @@
   - 设备管理
   - 参数管理
   - 服务端管理
+  - 聊天记录与会话状态查看
   - 模型配置
   - 知识库管理
   - OTA 管理
@@ -40,7 +41,7 @@
 ```text
 ESP32-AI-Voice-Edge-System
 ├─ frontend/
-│  ├─ src/views/                    控制台页面
+│  ├─ src/views/                    Web GUI 页面
 │  ├─ src/components/               复用组件
 │  ├─ src/apis/                     前端接口封装
 │  ├─ src/router/                   路由配置
@@ -78,14 +79,14 @@ ESP32-AI-Voice-Edge-System
 | 终端状态管理 | `hardware/main/application.*`, `device_state_machine.*` | 待机、监听、上传、等待反馈、播放反馈等状态切换 |
 | 实时语音服务 | `backend/xiaozhi-server/core/` | WebSocket 会话、HTTP 接口、模型调度、音频返回 |
 | 管理后端 | `backend/manager-api/src/main/java/xiaozhi/modules/` | 用户、设备、参数、知识库、OTA、角色与声纹接口 |
-| Web 控制台 | `frontend/src/views/` | 参数配置、设备管理、模型管理、运行状态查看 |
+| Web GUI 控制台 | `frontend/src/views/` | 参数配置、设备管理、模型管理、聊天记录更新、运行状态查看 |
 | 测试工具 | `backend/xiaozhi-server/performance_tester.py`, `backend/xiaozhi-server/test/test_page.html` | 音频交互测试与模型性能测试 |
 
 ## 默认端口与服务关系
 
 | 服务 | 默认地址 | 用途 |
 | --- | --- | --- |
-| Web 控制台 | `http://127.0.0.1:8001` | 前端页面 |
+| Web GUI 控制台 | `http://127.0.0.1:8001` | 图形化管理与状态查看页面 |
 | 管理后端 `manager-api` | `http://127.0.0.1:8002/xiaozhi` | 管理接口、设备配置、参数管理 |
 | 实时语音服务 `xiaozhi-server` | `ws://127.0.0.1:8000/xiaozhi/v1/` | ESP32 语音会话链路 |
 | HTTP / OTA / Vision | `http://127.0.0.1:8003` | OTA、视觉分析、辅助 HTTP 接口 |
@@ -207,7 +208,7 @@ python app.py
 ws://127.0.0.1:8000/xiaozhi/v1/
 ```
 
-### 3. 启动 Web 控制台
+### 3. 启动 Web GUI 控制台
 
 启动命令：
 
