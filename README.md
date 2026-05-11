@@ -290,7 +290,7 @@ idf.py -p <port> flash monitor
 
 统计口径：`main` 分支全部历史提交，代码类文件新增行与删除行之和。
 
-![代码行变更占比](https://github.com/wslave/ESP32-AI-Voice-Edge-System/blob/gh-pages/contribution-line-share.svg?raw=1)
+![代码行变更占比](https://github.com/wslave/ESP32-AI-Voice-Edge-System/blob/gh-pages/contribution-line-share.svg)
 
 静态备份图：[`contribution-line-share.svg`](./.github/pages/contribution-line-share.svg)
 
