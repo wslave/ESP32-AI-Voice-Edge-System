@@ -10,8 +10,8 @@ sdkconfig
 dependencies.lock
 .env
 releases/
-main/assets/lang_config.h
-main/mmap_generate_emoji.h
+hardware/main/assets/lang_config.h
+hardware/main/mmap_generate_emoji.h
 .DS_Store
 .cache
 *.pyc
