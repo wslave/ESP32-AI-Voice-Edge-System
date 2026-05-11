@@ -150,8 +150,8 @@ def build_svg(stats: list[Stats]) -> str:
     width = 960
     height = 540
     cx = 255
-    cy = 270
-    radius = 150
+    cy = 250
+    radius = 145
 
     slices: list[str] = []
     start_angle = 0.0
@@ -169,7 +169,7 @@ def build_svg(stats: list[Stats]) -> str:
             start_angle = end_angle
 
     rows: list[str] = []
-    row_y = 195
+    row_y = 160
     for item in stats:
         percent = item.churn * 100 / total if total else 0
         rows.append(
@@ -183,15 +183,18 @@ def build_svg(stats: list[Stats]) -> str:
                     ),
                     (
                         f'<text x="530" y="{row_y + 44}" class="muted-text" font-size="18">'
-                        f'变更 {item.churn:,} 行（+{item.additions:,} / -{item.deletions:,}）</text>'
+                        f'变更 {item.churn:,} 行</text>'
+                    ),
+                    (
+                        f'<text x="530" y="{row_y + 70}" class="muted-text" font-size="17">'
+                        f'(+{item.additions:,} / -{item.deletions:,})</text>'
                     ),
                 ]
             )
         )
-        row_y += 92
+        row_y += 108
 
     updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    subtitle = "统计口径：main 分支全部历史提交，代码类文件新增行 + 删除行"
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">
   <title id="title">贡献者代码行变更占比</title>
@@ -229,15 +232,13 @@ def build_svg(stats: list[Stats]) -> str:
   </style>
   <rect class="bg" width="100%" height="100%" rx="20"/>
   <rect class="panel" x="16" y="16" width="928" height="508" rx="18"/>
-  <text x="48" y="64" class="title-text" font-size="32" font-weight="700">贡献者代码行变更占比</text>
-  <text x="500" y="84" class="muted-text" font-size="18">{subtitle}</text>
-  <text x="500" y="112" class="muted-text" font-size="16">自动更新时间：{updated_at}</text>
   <circle cx="{cx}" cy="{cy}" r="{radius}" class="ring-bg" />
   {''.join(slices)}
   <circle cx="{cx}" cy="{cy}" r="74" class="inner-ring" />
   <text x="{cx}" y="{cy - 4}" class="muted-text" text-anchor="middle" font-size="18">总变更</text>
   <text x="{cx}" y="{cy + 30}" class="title-text" text-anchor="middle" font-size="34" font-weight="700">{sum(item.churn for item in stats):,}</text>
   {''.join(rows)}
+  <text x="40" y="498" class="muted-text" font-size="15">自动更新时间：{updated_at}</text>
 </svg>
 """
 

@@ -287,7 +287,9 @@ idf.py -p <port> flash monitor
 
 该图会在每次推送到 `main` 后由 GitHub Actions 自动重新生成，并发布到仓库的 `gh-pages` 分支，不再通过 bot 提交去改 README 本身。
 
-![代码行变更占比](https://raw.githubusercontent.com/wslave/ESP32-AI-Voice-Edge-System/gh-pages/contribution-line-share.svg)
+统计口径：`main` 分支全部历史提交，代码类文件新增行与删除行之和。
+
+![代码行变更占比](https://github.com/wslave/ESP32-AI-Voice-Edge-System/blob/gh-pages/contribution-line-share.svg?raw=1)
 
 静态备份图：[`contribution-line-share.svg`](./.github/pages/contribution-line-share.svg)
 
