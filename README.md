@@ -201,21 +201,18 @@ idf.py -p <port> flash monitor
 2. 明确 `xiaozhi-server` 实际使用的 VAD / ASR / LLM / TTS 配置，删除未使用模型与插件说明。
 3. 根据论文展示需要，在前端只保留设备管理、参数管理、服务端管理、OTA 和日志相关页面。
 
-## 提交占比
+## 代码行变更占比
 
-以下统计基于 `main` 分支截至 2026-05-11 的作者提交记录，并按当前 README 中列出的两位贡献者进行汇总。由于 `wslave` 在历史中使用过 `Wslave`、`Xu DeJia`、`许德佳` 三种作者名，这里已合并统计；`Charles-0509` 当前在 `main` 分支中未检索到署名提交。
+下图统计 README 中列出的两位贡献者在当前仓库历史中的代码行变更量占比，统计方式基于 `git log --numstat` 汇总代码类文件的新增行与删除行之和，并自动合并以下作者别名：
 
-| 贡献者 | 提交数 | 占比 |
-| --- | ---: | ---: |
-| Wslave | 12 | 100% |
-| Charles-0509 | 0 | 0% |
+- `Wslave / Xu DeJia / 许德佳`
+- `Charles / Charles-0509`
 
-```mermaid
-pie showData
-    title main 分支提交占比（截至 2026-05-11）
-    "Wslave - 12 commits" : 12
-    "Charles-0509 - 0 commits" : 0
-```
+该图会在每次推送到 `main` 后由 GitHub Actions 自动重新生成，不再通过 bot 提交去改 README 本身。
+
+![代码行变更占比](https://wslave.github.io/ESP32-AI-Voice-Edge-System/contribution-line-share.svg)
+
+静态备份图：[`contribution-line-share.svg`](./.github/pages/contribution-line-share.svg)
 
 ## 贡献者
 
