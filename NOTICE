@@ -1,0 +1,17 @@
+This repository adapts code from:
+
+    xinnan-tech/xiaozhi-esp32-server
+    https://github.com/xinnan-tech/xiaozhi-esp32-server
+
+Some static asset-generation files under main/manager-web/public/generator are
+derived from:
+
+    xinnan-tech/xiaozhi-assets-generator
+    https://github.com/xinnan-tech/xiaozhi-assets-generator
+
+The upstream project is licensed under the MIT License. The original copyright
+notice is preserved in LICENSE as required by the license.
+
+Local adaptations in this repository focus on project documentation, default
+assistant descriptions, management-console display text, and thesis-oriented
+wording for an ESP32 plus local AI host voice interaction control system.
