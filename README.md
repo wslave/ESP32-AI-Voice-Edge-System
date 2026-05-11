@@ -52,14 +52,14 @@ npm run build
       <a href="https://github.com/wslave">
         <img src="https://avatars.githubusercontent.com/wslave?s=100" width="100px;" alt="Wslave"/>
         <br />
-        <sub><b>wslave</b></sub>
+        <sub><b>Wslave</b></sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/Charles-0509">
         <img src="https://avatars.githubusercontent.com/Charles-0509?s=100" width="100px;" alt="Charles-0509"/>
         <br />
-        <sub><b>wslave</b></sub>
+        <sub><b>Charles-0509</b></sub>
       </a>
     </td>
   </tr>
