@@ -1,18 +1,25 @@
-# 系统模块说明
+# Main Modules
 
-`main` 目录包含本地 AI 语音交互控制系统的主要后端和前端模块。
+The `main` directory now keeps two parts:
 
-## 模块划分
+- ESP32 firmware source code restored from the original hardware project.
+- `manager-web`, the retained browser-based management UI.
 
-- `xiaozhi-server`：Python 语音交互服务端，负责 WebSocket 连接、音频流处理、VAD、ASR、LLM、TTS、MCP/工具调用和测试页面。
-- `manager-api`：Java 管理后端，负责用户、设备、智能体模板、模型配置、OTA、知识库和日志数据。
-- `manager-web`：浏览器端 GUI 管理界面，用于查看设备状态、识别文本、交互记录和模型/角色配置。
-- `manager-mobile`：移动端管理界面，用于手机端设备配置和基础管理。
+The backend server, Java management API, and mobile management app from the imported server project have been removed. The Web UI is kept as a separate frontend module so it can be adapted to the ESP32 voice interaction workflow without carrying the full server stack.
 
-## 设计思路
+## ESP32 Firmware
 
-系统把资源受限的 ESP32 语音终端和本地上位机分开设计。ESP32 侧重点处理 I2S 采样、音频分帧、VAD 触发和局域网传输；上位机侧重点处理语音识别、语义理解、指令推理和运行状态管理；GUI 侧重点记录连接状态、识别结果、日志和性能信息。这样的组织方式便于在联调时分别定位采样、传输、识别、推理和显示环节的问题。
+Core firmware files live directly under `main`, with board, audio, display, LED, protocol, OTA, settings, and system information modules grouped in their existing subdirectories.
 
-## 配置建议
+## Web UI
 
-开发阶段不要直接修改 `xiaozhi-server/config.yaml` 中的密钥和私有地址，建议创建 `xiaozhi-server/data/.config.yaml` 覆盖需要调整的字段。这样可以减少配置污染，也便于在不同电脑或局域网环境中复现实验。
+The Web UI lives in `main/manager-web`.
+
+```bash
+cd main/manager-web
+npm ci
+npm run build
+```
+
+Build output is generated under `main/manager-web/dist` and is intentionally ignored by Git.
+
