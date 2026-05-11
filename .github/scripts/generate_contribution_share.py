@@ -169,7 +169,7 @@ def build_svg(stats: list[Stats]) -> str:
             start_angle = end_angle
 
     rows: list[str] = []
-    row_y = 165
+    row_y = 195
     for item in stats:
         percent = item.churn * 100 / total if total else 0
         rows.append(
@@ -230,8 +230,8 @@ def build_svg(stats: list[Stats]) -> str:
   <rect class="bg" width="100%" height="100%" rx="20"/>
   <rect class="panel" x="16" y="16" width="928" height="508" rx="18"/>
   <text x="48" y="64" class="title-text" font-size="32" font-weight="700">贡献者代码行变更占比</text>
-  <text x="48" y="98" class="muted-text" font-size="18">{subtitle}</text>
-  <text x="48" y="124" class="muted-text" font-size="16">自动更新时间：{updated_at}</text>
+  <text x="500" y="84" class="muted-text" font-size="18">{subtitle}</text>
+  <text x="500" y="112" class="muted-text" font-size="16">自动更新时间：{updated_at}</text>
   <circle cx="{cx}" cy="{cy}" r="{radius}" class="ring-bg" />
   {''.join(slices)}
   <circle cx="{cx}" cy="{cy}" r="74" class="inner-ring" />

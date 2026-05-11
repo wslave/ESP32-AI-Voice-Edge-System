@@ -1,126 +1,197 @@
 # ESP32 本地 AI 语音交互控制系统
 
-本仓库对应毕业论文《基于 ESP32 与本地 AI 上位机的语音交互控制系统的设计与实现》。系统采用论文中的端边协同思路，将语音链路拆分为 `ESP32 语音终端 + 本地 AI 上位机 + Web 控制台` 三个部分：ESP32 负责采音、VAD 触发、播放与设备侧状态反馈；本地上位机负责识别、语义理解、指令推理和服务协调；Web 控制台负责配置、状态观测、日志查看和联调。
+本仓库对应毕业论文《基于 ESP32 与本地 AI 上位机的语音交互控制系统的设计与实现》，实现形态为 `ESP32 语音终端 + 本地 AI 上位机 + Web 控制台`。代码由 C++ 固件、Python 实时语音服务、Java 管理后端和 Vue 前端组成，目标是完成局域网内的语音采集、识别、语义处理、设备管理、状态监控和测试联调。
 
-与完全依赖云端语音服务的方案相比，本项目更强调局域网内可部署、可调试、可观察的完整闭环。代码结构也按这一思路整理为前端、后端和硬件三层，便于论文说明、系统演示和后续裁剪。
+## 项目组成
 
-## 系统架构
+### ESP32 语音终端
 
-按照论文第 2 章“系统总体设计”的划分，当前仓库中的代码可以对应为以下三层：
+- 目录：`hardware/`
+- 入口：`hardware/main/main.cc`
+- 关键模块：
+  - `hardware/main/audio/`：I2S 采样、音频编解码、VAD 前处理
+  - `hardware/main/protocols/`：WebSocket / MQTT 协议传输
+  - `hardware/main/display/`：屏幕状态显示
+  - `hardware/main/led/`：LED 状态反馈
+  - `hardware/main/settings.*`：NVS 参数管理
 
-1. `hardware/`：ESP32 语音终端
-   - 负责 I2S 麦克风采样、语音活动检测、音频封装、网络传输、音频播放和外设控制。
-   - 当前核心入口是 `hardware/main/main.cc`，由 `Application` 统一调度音频、协议、状态机、OTA 和板级外设。
-   - `hardware/main/audio`、`hardware/main/protocols`、`hardware/main/display`、`hardware/main/led` 分别对应论文中的采音、通信、显示和反馈模块。
+### 本地 AI 上位机
 
-2. `backend/`：本地 AI 上位机
-   - `backend/manager-api` 是基于 Spring Boot 的管理后端，承担用户认证、设备管理、参数管理、模型管理、知识库、OTA 和服务端配置接口。
-   - `backend/xiaozhi-server` 是 Python 实时语音服务，负责 WebSocket 语音链路、VAD/ASR/LLM/TTS 模块编排、视觉分析接口和运行日志输出。
-   - 两个后端合在一起，对应论文中的“上位机 AI 语义处理模块 + 状态管理模块”。
+- 目录：`backend/`
+- 组成：
+  - `backend/xiaozhi-server/`：Python 实时语音服务，负责音频接入、VAD、ASR、LLM、TTS、意图处理和 WebSocket/HTTP 接口
+  - `backend/manager-api/`：Spring Boot 管理后端，负责用户、设备、参数、知识库、模型、OTA 和配置管理
 
-3. `frontend/`：Web 控制台
-   - 基于 Vue 2 + Element UI 构建。
-   - 页面包含设备管理、模型配置、参数管理、知识库管理、服务端管理、OTA 管理、音色资源、声纹和日志相关功能。
-   - 它对应论文中的 GUI 交互模块，用于显示识别结果、设备状态、服务配置和联调信息。
+### Web 控制台
 
-## 仓库结构
+- 目录：`frontend/`
+- 技术栈：Vue 2、Vue Router、Vuex、Element UI
+- 页面模块：
+  - 设备管理
+  - 参数管理
+  - 服务端管理
+  - 模型配置
+  - 知识库管理
+  - OTA 管理
+  - 声纹与音色资源管理
+
+## 代码架构
 
 ```text
 ESP32-AI-Voice-Edge-System
-├─ frontend/                Web 控制台
-│  ├─ src/                  页面、路由、接口封装、国际化资源
-│  ├─ public/               静态页面与 PWA 资源
-│  ├─ package.json          前端脚本入口
-│  └─ vue.config.js         开发端口、代理和生产构建配置
+├─ frontend/
+│  ├─ src/views/                    控制台页面
+│  ├─ src/components/               复用组件
+│  ├─ src/apis/                     前端接口封装
+│  ├─ src/router/                   路由配置
+│  └─ vue.config.js                 开发端口与代理配置
 ├─ backend/
-│  ├─ manager-api/          Spring Boot 管理后端
-│  │  ├─ src/main/java/xiaozhi/modules/
-│  │  │  ├─ device/         设备与 OTA 相关接口
-│  │  │  ├─ config/         参数与系统配置接口
-│  │  │  ├─ knowledge/      知识库与文档上传接口
-│  │  │  └─ agent/          角色、声纹、MCP 接入点等接口
-│  │  └─ src/main/resources/ application.yml 与开发环境配置
-│  └─ xiaozhi-server/       Python 实时语音服务
-│     ├─ app.py             服务主入口
-│     ├─ core/              WebSocket、HTTP、鉴权与处理链路
-│     ├─ config/            配置加载、日志与 API 客户端
-│     ├─ plugins_func/      工具插件与扩展能力
-│     └─ models/            本地模型目录
-├─ hardware/
-│  ├─ CMakeLists.txt        ESP-IDF 工程入口
-│  ├─ main/                 固件主逻辑、状态机、协议、音频与板级适配
-│  ├─ partitions/           分区表
-│  └─ sdkconfig.defaults*   多芯片默认构建配置
-└─ README.md
+│  ├─ manager-api/
+│  │  ├─ src/main/java/xiaozhi/modules/device/      设备与 OTA
+│  │  ├─ src/main/java/xiaozhi/modules/config/      参数配置
+│  │  ├─ src/main/java/xiaozhi/modules/knowledge/   知识库
+│  │  ├─ src/main/java/xiaozhi/modules/agent/       角色、声纹、MCP
+│  │  └─ src/main/resources/                        Spring Boot 配置
+│  └─ xiaozhi-server/
+│     ├─ app.py                     服务主入口
+│     ├─ core/                      WebSocket、HTTP、认证与处理链路
+│     ├─ config/                    配置加载与日志
+│     ├─ plugins_func/              工具调用插件
+│     ├─ performance_tester.py      模型性能测试
+│     └─ test/test_page.html        音频交互测试页
+└─ hardware/
+   ├─ CMakeLists.txt                ESP-IDF 工程入口
+   ├─ main/application.*            终端主调度
+   ├─ main/audio/                   音频处理
+   ├─ main/protocols/               终端通信协议
+   ├─ main/display/                 界面显示
+   ├─ main/boards/                  板级适配
+   └─ partitions/                   分区表
 ```
 
-## 运行关系
+## 功能模块
 
-当前默认端口和调用关系如下：
+| 模块 | 代码位置 | 当前实现 |
+| --- | --- | --- |
+| 语音采集与上传 | `hardware/main/audio/` | I2S 采样、前导缓冲、VAD 触发、音频分帧上传 |
+| 终端通信 | `hardware/main/protocols/` | WebSocket / MQTT 协议封装、状态回传 |
+| 终端状态管理 | `hardware/main/application.*`, `device_state_machine.*` | 待机、监听、上传、等待反馈、播放反馈等状态切换 |
+| 实时语音服务 | `backend/xiaozhi-server/core/` | WebSocket 会话、HTTP 接口、模型调度、音频返回 |
+| 管理后端 | `backend/manager-api/src/main/java/xiaozhi/modules/` | 用户、设备、参数、知识库、OTA、角色与声纹接口 |
+| Web 控制台 | `frontend/src/views/` | 参数配置、设备管理、模型管理、运行状态查看 |
+| 测试工具 | `backend/xiaozhi-server/performance_tester.py`, `backend/xiaozhi-server/test/test_page.html` | 音频交互测试与模型性能测试 |
 
-- `frontend` 开发服务：`http://127.0.0.1:8001`
-- `manager-api`：`http://127.0.0.1:8002/xiaozhi`
-- `xiaozhi-server` WebSocket：`ws://127.0.0.1:8000/xiaozhi/v1/`
-- `xiaozhi-server` HTTP / OTA / vision：`http://127.0.0.1:8003`
+## 默认端口与服务关系
 
-前端在开发模式下通过 `vue.config.js` 将 `/xiaozhi` 代理到 `http://127.0.0.1:8002`，因此 Web 控制台主要连接 `manager-api`。ESP32 终端则通过 WebSocket 连接 `xiaozhi-server`，由后者完成语音识别、语义推理与语音返回；如果采用 `config_from_api.yaml` 方案，`xiaozhi-server` 还可以从 `manager-api` 拉取配置。
+| 服务 | 默认地址 | 用途 |
+| --- | --- | --- |
+| Web 控制台 | `http://127.0.0.1:8001` | 前端页面 |
+| 管理后端 `manager-api` | `http://127.0.0.1:8002/xiaozhi` | 管理接口、设备配置、参数管理 |
+| 实时语音服务 `xiaozhi-server` | `ws://127.0.0.1:8000/xiaozhi/v1/` | ESP32 语音会话链路 |
+| HTTP / OTA / Vision | `http://127.0.0.1:8003` | OTA、视觉分析、辅助 HTTP 接口 |
 
-## 启动顺序
+前端开发模式下通过 `frontend/vue.config.js` 将 `/xiaozhi` 代理到 `http://127.0.0.1:8002`。ESP32 终端默认连接 `xiaozhi-server` 的 WebSocket 接口；如需从管理后端拉取配置，可使用 `backend/xiaozhi-server/config_from_api.yaml`。
 
-### 1. 准备基础依赖
+## 实验性能
 
-- Node.js 18 及以上
-- Python 3.10 及以上
-- JDK 21
-- Maven 3.8 及以上
-- MySQL 8.0
-- Redis 5.0 及以上
-- ESP-IDF 5.x（仅在需要编译硬件固件时）
+以下数据取自论文联调与测试章节，统计对象为本系统的局域网部署版本。
 
-### 2. 启动 `manager-api`
+### 功能与性能指标
 
-配置文件位于：
+| 指标 | 测试结果 |
+| --- | --- |
+| 语音识别准确率 | `57 / 60`，准确率 `95.0%` |
+| 语义理解准确率 | `58 / 60`，准确率 `96.7%` |
+| 本地链路端到端平均时延 | `1.18 s` |
+| 外部模型链路端到端平均时延 | `1.44 s` |
+| GUI 刷新频率 | `27.8 fps` |
+| GUI 识别结果显示延迟 | `94 ms` |
+| GUI 状态刷新周期 | `1 s / 次` |
+
+### 时延对比
+
+| 测试对象 | 模型/链路 | 样本数 | 平均响应时延 | P95 时延 | 稳定性记录 |
+| --- | --- | ---: | ---: | ---: | --- |
+| 本系统 | Ollama 本地模型 | 30 | `1186 ms` | `1438 ms` | `30 min` 无掉线 |
+| 本系统 | WSL `llama.cpp` 本地模型 | 30 | `1048 ms` | `1295 ms` | `30 min` 无掉线 |
+| 星智 CUBE | Qwen 3.5 4G 物联网 | 30 | `1425 ms` | `1760 ms` | `30 min` 无掉线 |
+| 星智 CUBE | DeepSeek V3 4G 物联网 | 30 | `2318 ms` | `2860 ms` | `30 min`，1 次重连 |
+
+### 稳定性记录
+
+| 测试时长 | 交互轮次 | 掉线次数 | 重连次数 | 异常日志 | 结果 |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| `30 min` | 28 | 0 | 0 | 0 | 运行稳定 |
+| `60 min` | 53 | 0 | 0 | 1 | 1 次模型超时告警，自动恢复 |
+| `120 min` | 102 | 1 | 1 | 1 | 1 次无线连接断开，自动重连恢复 |
+
+### GUI 性能记录
+
+| 指标 | 目标值 | 当前记录值 |
+| --- | --- | --- |
+| 界面刷新频率 | `>= 5 fps` | `27.8 fps` |
+| 识别结果显示延迟 | `<= 200 ms` | `94 ms` |
+| 状态刷新周期 | `1 s / 次` | `1 s / 次` |
+| 长时日志显示稳定性 | 连续运行无明显卡顿 | `30 min` 无明显卡顿 |
+
+## 运行环境
+
+### 前端
+
+- Node.js `18+`
+- npm
+
+### 管理后端
+
+- JDK `21`
+- Maven `3.8+`
+- MySQL `8.0`
+- Redis `5.0+`
+
+### 实时语音服务
+
+- Python `3.10`
+- 关键依赖见 [requirements.txt](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/xiaozhi-server/requirements.txt)
+- 默认包含 `torch 2.2.2`、`torchaudio 2.2.2`、`funasr 1.2.7`、`silero_vad 6.1.0`
+
+### 硬件固件
+
+- ESP-IDF `5.x`
+- 支持 `esp32s3`、`esp32c3` 等目标芯片
+
+## 快速启动
+
+建议启动顺序为：`manager-api -> xiaozhi-server -> frontend -> hardware`
+
+### 1. 启动管理后端
+
+配置文件：
 
 - [application.yml](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/manager-api/src/main/resources/application.yml)
 - [application-dev.yml](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/manager-api/src/main/resources/application-dev.yml)
 
-默认开发配置：
-
-- HTTP 端口：`8002`
-- Context Path：`/xiaozhi`
-- MySQL：`127.0.0.1:3306/xiaozhi_esp32_server`
-- Redis：`127.0.0.1:6379`
-
-启动方式：
+启动命令：
 
 ```bash
 cd backend/manager-api
 mvn spring-boot:run
 ```
 
-启动后可访问接口文档：
+接口文档：
 
 ```text
 http://127.0.0.1:8002/xiaozhi/doc.html
 ```
 
-### 3. 启动 `xiaozhi-server`
+### 2. 启动实时语音服务
 
-核心入口文件：
+核心文件：
 
 - [app.py](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/xiaozhi-server/app.py)
 - [config.yaml](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/xiaozhi-server/config.yaml)
 - [config_from_api.yaml](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/backend/xiaozhi-server/config_from_api.yaml)
 
-默认运行端口：
-
-- WebSocket：`8000`
-- HTTP / OTA / 视觉接口：`8003`
-
-如果只想本地轻量运行，可直接使用 `config.yaml`。  
-如果希望从 `manager-api` 获取配置，可将 `config_from_api.yaml` 复制到 `backend/xiaozhi-server/data/.config.yaml`，再填入 `manager-api.url` 和 `manager-api.secret`。
-
-启动方式：
+启动命令：
 
 ```bash
 cd backend/xiaozhi-server
@@ -130,20 +201,15 @@ pip install -r requirements.txt
 python app.py
 ```
 
-服务启动后，终端链路默认使用：
+默认 WebSocket 地址：
 
 ```text
 ws://127.0.0.1:8000/xiaozhi/v1/
 ```
 
-### 4. 启动 `frontend`
+### 3. 启动 Web 控制台
 
-前端入口文件：
-
-- [package.json](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/frontend/package.json)
-- [vue.config.js](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/frontend/vue.config.js)
-
-启动方式：
+启动命令：
 
 ```bash
 cd frontend
@@ -151,7 +217,7 @@ npm ci
 npm run serve
 ```
 
-默认访问地址：
+访问地址：
 
 ```text
 http://127.0.0.1:8001
@@ -164,14 +230,9 @@ cd frontend
 npm run build
 ```
 
-### 5. 编译与烧录 `hardware`
+### 4. 编译与烧录 ESP32 固件
 
-硬件部分是标准 ESP-IDF 工程，根入口位于：
-
-- [hardware/CMakeLists.txt](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/hardware/CMakeLists.txt)
-- [hardware/main/main.cc](C:/Users/Wslave/Documents/New%20project/Code/ESP32-AI-Voice-Edge-System/hardware/main/main.cc)
-
-在已安装 ESP-IDF 的前提下，可按实际芯片目标执行：
+启动命令：
 
 ```bash
 cd hardware
@@ -180,26 +241,42 @@ idf.py build
 idf.py -p <port> flash monitor
 ```
 
-`<chip>` 需按实际开发板选择，例如 `esp32s3`、`esp32c3` 等。由于仓库仍保留多个 `boards` 适配目录，建议先确定最终板型后再进一步裁剪。
+## 配置文件
 
-## 从论文视角理解当前代码
+### `backend/manager-api`
 
-为了与论文正文保持一致，可以把当前代码理解为一条完整的本地语音交互链路：
+默认开发配置：
 
-1. 用户发声后，ESP32 在 `hardware/` 中完成采样、缓存、VAD 判定和上传。
-2. `backend/xiaozhi-server` 接收音频流，进行识别、语义理解、意图推理和语音返回。
-3. `backend/manager-api` 负责设备信息、参数、模型、知识库、OTA 和管理配置。
-4. `frontend/` 将设备状态、服务配置、识别结果和日志以 Web 页面形式展示出来。
+- 端口：`8002`
+- Context Path：`/xiaozhi`
+- MySQL：`127.0.0.1:3306/xiaozhi_esp32_server`
+- Redis：`127.0.0.1:6379`
 
-这也解释了为什么仓库现在不是单一“网页项目”或单一“固件项目”，而是围绕论文中的端边协同架构，将调试、管理、识别和终端执行拆成三个层次。
+### `backend/xiaozhi-server`
 
-## 后续裁剪建议
+默认配置：
 
-如果后续要把仓库进一步收束到论文答辩版本，建议按下面顺序继续精简：
+- `server.port: 8000`
+- `server.http_port: 8003`
+- `server.websocket: ws://你的ip或者域名:端口号/xiaozhi/v1/`
+- 支持 `config.yaml` 本地配置
+- 支持 `data/.config.yaml` 覆盖配置
+- 支持 `config_from_api.yaml` 从 `manager-api` 拉取参数
 
-1. 先确定最终使用的 ESP32 开发板，只保留对应 `hardware/main/boards/*` 目录。
-2. 明确 `xiaozhi-server` 实际使用的 VAD / ASR / LLM / TTS 配置，删除未使用模型与插件说明。
-3. 根据论文展示需要，在前端只保留设备管理、参数管理、服务端管理、OTA 和日志相关页面。
+### `frontend`
+
+`frontend/vue.config.js` 默认配置：
+
+- 开发端口：`8001`
+- `/xiaozhi` 代理目标：`http://127.0.0.1:8002`
+
+## 测试工具
+
+| 工具 | 位置 | 用途 |
+| --- | --- | --- |
+| 音频交互测试页 | `backend/xiaozhi-server/test/test_page.html` | 验证 WebSocket 音频收发与播放 |
+| 模型性能测试 | `backend/xiaozhi-server/performance_tester.py` | 测试 ASR、LLM、VLLM、TTS 响应速度 |
+| 接口文档 | `http://127.0.0.1:8002/xiaozhi/doc.html` | 查看管理后端接口 |
 
 ## 代码行变更占比
 
