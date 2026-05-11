@@ -55,6 +55,13 @@ npm run build
         <sub><b>wslave</b></sub>
       </a>
     </td>
+    <td align="center">
+      <a href="https://github.com/Charles-0509">
+        <img src="https://avatars.githubusercontent.com/Charles-0509?s=100" width="100px;" alt="wslave"/>
+        <br />
+        <sub><b>wslave</b></sub>
+      </a>
+    </td>
   </tr>
 </table>
 <!-- readme: collaborators,contributors -end -->
