@@ -208,9 +208,9 @@ idf.py -p <port> flash monitor
 - `Wslave / Xu DeJia / 许德佳`
 - `Charles / Charles-0509`
 
-该图会在每次推送到 `main` 后由 GitHub Actions 自动重新生成，不再通过 bot 提交去改 README 本身。
+该图会在每次推送到 `main` 后由 GitHub Actions 自动重新生成，并发布到仓库的 `gh-pages` 分支，不再通过 bot 提交去改 README 本身。
 
-![代码行变更占比](https://wslave.github.io/ESP32-AI-Voice-Edge-System/contribution-line-share.svg)
+![代码行变更占比](https://raw.githubusercontent.com/wslave/ESP32-AI-Voice-Edge-System/gh-pages/contribution-line-share.svg)
 
 静态备份图：[`contribution-line-share.svg`](./.github/pages/contribution-line-share.svg)
 

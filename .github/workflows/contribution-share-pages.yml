@@ -7,16 +7,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: contribution-share-pages
   cancel-in-progress: true
 
 jobs:
-  build-chart:
+  publish-chart:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,21 +33,10 @@ jobs:
             --repo . \
             --output-dir .github/pages
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish SVG to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: .github/pages
-
-  deploy-chart:
-    needs: build-chart
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: .github/pages
+          force_orphan: true
