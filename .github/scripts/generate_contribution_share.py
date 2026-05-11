@@ -176,13 +176,13 @@ def build_svg(stats: list[Stats]) -> str:
             "\n".join(
                 [
                     f'<rect x="500" y="{row_y}" width="18" height="18" rx="4" fill="{item.color}" />',
-                    f'<text x="530" y="{row_y + 14}" font-size="24" fill="#0f172a" font-weight="700">{item.label}</text>',
+                    f'<text x="530" y="{row_y + 14}" class="label-text" font-size="24" font-weight="700">{item.label}</text>',
                     (
-                        f'<text x="760" y="{row_y + 14}" font-size="22" fill="#334155" text-anchor="end">'
+                        f'<text x="760" y="{row_y + 14}" class="value-text" font-size="22" text-anchor="end">'
                         f'{percent:.1f}%</text>'
                     ),
                     (
-                        f'<text x="530" y="{row_y + 44}" font-size="18" fill="#475569">'
+                        f'<text x="530" y="{row_y + 44}" class="muted-text" font-size="18">'
                         f'变更 {item.churn:,} 行（+{item.additions:,} / -{item.deletions:,}）</text>'
                     ),
                 ]
@@ -196,15 +196,47 @@ def build_svg(stats: list[Stats]) -> str:
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">
   <title id="title">贡献者代码行变更占比</title>
   <desc id="desc">按 git log numstat 统计代码类文件的新增与删除行总和。</desc>
-  <rect width="100%" height="100%" fill="#ffffff"/>
-  <text x="48" y="64" font-size="32" font-weight="700" fill="#0f172a">贡献者代码行变更占比</text>
-  <text x="48" y="98" font-size="18" fill="#475569">{subtitle}</text>
-  <text x="48" y="124" font-size="16" fill="#64748b">自动更新时间：{updated_at}</text>
-  <circle cx="{cx}" cy="{cy}" r="{radius}" fill="#e2e8f0" />
+  <style>
+    :root {{
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --panel-stroke: #e2e8f0;
+      --title: #0f172a;
+      --text: #334155;
+      --muted: #64748b;
+      --ring-bg: #e2e8f0;
+      --inner: #ffffff;
+    }}
+    @media (prefers-color-scheme: dark) {{
+      :root {{
+        --bg: #0f172a;
+        --panel: #111827;
+        --panel-stroke: #334155;
+        --title: #f8fafc;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --ring-bg: #1e293b;
+        --inner: #0f172a;
+      }}
+    }}
+    .bg {{ fill: var(--bg); }}
+    .panel {{ fill: var(--panel); stroke: var(--panel-stroke); stroke-width: 1; }}
+    .title-text {{ fill: var(--title); }}
+    .label-text, .value-text {{ fill: var(--text); }}
+    .muted-text {{ fill: var(--muted); }}
+    .ring-bg {{ fill: var(--ring-bg); }}
+    .inner-ring {{ fill: var(--inner); }}
+  </style>
+  <rect class="bg" width="100%" height="100%" rx="20"/>
+  <rect class="panel" x="16" y="16" width="928" height="508" rx="18"/>
+  <text x="48" y="64" class="title-text" font-size="32" font-weight="700">贡献者代码行变更占比</text>
+  <text x="48" y="98" class="muted-text" font-size="18">{subtitle}</text>
+  <text x="48" y="124" class="muted-text" font-size="16">自动更新时间：{updated_at}</text>
+  <circle cx="{cx}" cy="{cy}" r="{radius}" class="ring-bg" />
   {''.join(slices)}
-  <circle cx="{cx}" cy="{cy}" r="74" fill="#ffffff" />
-  <text x="{cx}" y="{cy - 4}" text-anchor="middle" font-size="18" fill="#64748b">总变更</text>
-  <text x="{cx}" y="{cy + 30}" text-anchor="middle" font-size="34" font-weight="700" fill="#0f172a">{sum(item.churn for item in stats):,}</text>
+  <circle cx="{cx}" cy="{cy}" r="74" class="inner-ring" />
+  <text x="{cx}" y="{cy - 4}" class="muted-text" text-anchor="middle" font-size="18">总变更</text>
+  <text x="{cx}" y="{cy + 30}" class="title-text" text-anchor="middle" font-size="34" font-weight="700">{sum(item.churn for item in stats):,}</text>
   {''.join(rows)}
 </svg>
 """
