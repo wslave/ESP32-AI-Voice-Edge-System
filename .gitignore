@@ -19,6 +19,4 @@ main/mmap_generate_emoji.h
 mmap_generate_*.h
 .clangd
 node_modules/
-main/manager-web/node_modules/
-main/manager-web/.webpack_cache/
-main/manager-web/dist/
+.webpack_cache/

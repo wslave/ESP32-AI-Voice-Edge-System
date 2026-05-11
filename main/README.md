@@ -1,25 +1,12 @@
-# Main Modules
+# ESP32 Firmware
 
-The `main` directory now keeps two parts:
+`main` 目录只保留 ESP32 语音终端固件代码。Web 控制台已经移动到仓库根目录，后端接口由本地 AI 上位机提供。
 
-- ESP32 firmware source code restored from the original hardware project.
-- `manager-web`, the retained browser-based management UI.
+固件侧主要负责：
 
-The backend server, Java management API, and mobile management app from the imported server project have been removed. The Web UI is kept as a separate frontend module so it can be adapted to the ESP32 voice interaction workflow without carrying the full server stack.
+- 麦克风音频采集、VAD 触发和音频帧封装。
+- 通过网络协议与本地上位机传输语音、状态和控制消息。
+- 接收上位机返回的播放音频和设备控制指令。
+- 管理显示、音频、LED、按键、电源、OTA 和板级外设。
 
-## ESP32 Firmware
-
-Core firmware files live directly under `main`, with board, audio, display, LED, protocol, OTA, settings, and system information modules grouped in their existing subdirectories.
-
-## Web UI
-
-The Web UI lives in `main/manager-web`.
-
-```bash
-cd main/manager-web
-npm ci
-npm run build
-```
-
-Build output is generated under `main/manager-web/dist` and is intentionally ignored by Git.
-
+板级适配目录暂时保留，避免在未确定最终硬件型号前破坏编译目标。确定具体开发板后，可以进一步删除未使用的 `boards` 子目录。
